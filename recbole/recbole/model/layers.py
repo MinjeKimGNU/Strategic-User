@@ -488,33 +488,9 @@ class MultiHeadAttention(nn.Module):
         # print("last hidden_states : ", hidden_states.shape)
         return hidden_states
 
-    """
-    One decoupled transformer layer consists of a decoupled multi-head self-attention layer and a point-wise feed-forward layer.
 
-    Args:
-        hidden_states (torch.Tensor): the input of the multi-head self-attention sublayer
-        attention_mask (torch.Tensor): the attention mask for the multi-head self-attention sublayer
 
-    Returns:
-        feedforward_output (torch.Tensor): The output of the point-wise feed-forward sublayer,
-                                           is the output of the transformer layer.
 
-    """
-
-    def __init__(
-        self, n_heads, hidden_size,attribute_hidden_size,feat_num, intermediate_size, hidden_dropout_prob, attn_dropout_prob, hidden_act,
-        layer_norm_eps,fusion_type,max_len
-    ):
-        super(DIFTransformerLayer, self).__init__()
-        self.multi_head_attention = DIFMultiHeadAttention(
-            n_heads, hidden_size,attribute_hidden_size, feat_num, hidden_dropout_prob, attn_dropout_prob, layer_norm_eps,fusion_type,max_len,
-        )
-        self.feed_forward = FeedForward(hidden_size, intermediate_size, hidden_dropout_prob, hidden_act, layer_norm_eps)
-
-    def forward(self, hidden_states,attribute_embed,position_embedding, attention_mask):
-        attention_output = self.multi_head_attention(hidden_states,attribute_embed,position_embedding, attention_mask)
-        feedforward_output = self.feed_forward(attention_output)
-        return feedforward_output
 class FeedForward(nn.Module):
     """
     Point-wise feed-forward layer is implemented by two dense layers.
